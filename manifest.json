@@ -1,0 +1,16 @@
+{
+    "name": "Task Managing Pet",
+    "version": "1.0.0",
+    "description": "This is an extension to have a cute pet that motivates you and organizes your schedule",
+    "manifest_version": 2,
+    "author": "Elina Kocarslan",
+    "action": {
+        "default_popup": "index.html",
+        "default_title": "Task Managing Pet",
+        "default_icon": "_.gif"
+    },
+    "permissions": [
+        "tabs",
+        "https://www.google.com/*"
+    ]
+}
