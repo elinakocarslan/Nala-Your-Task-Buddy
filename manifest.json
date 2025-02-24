@@ -1,16 +1,25 @@
 {
     "name": "Task Managing Pet",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "description": "This is an extension to have a cute pet that motivates you and organizes your schedule",
-    "manifest_version": 2,
+    "manifest_version": 3,
     "author": "Elina Kocarslan",
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA89uxkasERT4xjvAx3Jbe61Mu09WAxVJk4qQBfP/AN4iWuLpC7kPXq6ilCtDf8kiWDqYSo3oxj4sWwsADNUI7OoMgKZ8rDUmc2lEfKcsSPPE+S97dwusqSI0/GVbv5f1VpT1H+9tvmt3fDEuWH65jfcMfNA9U3Ag2o+K6sIGHVSzFieTnvXZlSU3+2GCY83vY/zbjeOYvelHU76u/GRYZuHxxqO2gcaHE/I7DaXEq16mR2Wz5aw7b1p2uVM7MC351UsV3ITnj4/wJ0sDDBv4OqTz1T30sg41mrlJgt+d+9ZZXN1r7c7RzRAzF/j4SJtynsqpQUHc7pAnqp0DHIciZ2QIDAQAB",
     "action": {
-        "default_popup": "index.html",
         "default_title": "Task Managing Pet",
-        "default_icon": "_.gif"
-    },
+        "default_popup": "./src/index.html"
+      },
     "permissions": [
-        "tabs",
-        "https://www.google.com/*"
-    ]
+        "identity"
+    ],
+    "oauth2": {
+        "client_id": "715072669994-acb9o3peb3sn1q9h9g89ihon5mkdda4e.apps.googleusercontent.com",
+        "scopes": [
+          "https://www.googleapis.com/auth/calendar.readonly"
+        ]
+    },
+    "host_permissions": ["http://*/*", "https://*/*"],
+    "background": {
+        "service_worker": "./src/background.js"
+      }
 }
