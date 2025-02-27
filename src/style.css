@@ -1,13 +1,31 @@
+@font-face {
+  font-family: 'Pixelify Sans';
+  src: url(/assets/fonts/Pixelify_Sans/static/PixelifySans-Medium.ttf);
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Noto Serif Display';
+  src: url(/assets/fonts/Noto_Serif_Display/NotoSerifDisplay-VariableFont_wdth\,wght.ttf);
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
     font-family: Arial, sans-serif;
     padding: 10px;
     width: 300px;
-    background-color: pink;
+    background-color: #FFC0D1;
+    justify-content: center;
+    align-items: center;
   }
   
   h1 {
     font-size: 18px;
     margin-bottom: 10px;
+    font-family: 'Pixelify Sans';
+    font-size: 18vh;
+
   }
   
   #events-container {
@@ -39,3 +57,5 @@ body {
   button:hover {
     background-color: #45a049;
   }
+
+  

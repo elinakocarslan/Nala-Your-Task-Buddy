@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Nala - Your Tasks</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <script src="calendar-api.js" defer></script>
+    <script src="homepage.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="pet-container">
+        <img src="assets/nala.png" alt="Nala Pet" id="pet-image">
+        <div class="speech-bubble" id="pet-speech">
+          Hi there! Let's organize your day!
+        </div>
+      </div>
+      
+      <h1>Your Tasks</h1>
+      
+      <div class="calendar-section">
+        <h2>Today's Events</h2>
+        <div id="events-container" class="events-list">
+          <p id="loading-message">Loading your events...</p>
+        </div>
+      </div>
+      
+      <div class="add-event-section">
+        <h2>Add New Event</h2>
+        <form id="add-event-form">
+          <div class="form-group">
+            <label for="event-title">Title:</label>
+            <input type="text" id="event-title" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="event-date">Date:</label>
+            <input type="date" id="event-date" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="event-time">Time:</label>
+            <input type="time" id="event-time" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="event-duration">Duration (minutes):</label>
+            <input type="number" id="event-duration" value="30" min="5" max="1440" required>
+          </div>
+          
+          <button type="submit" class="primary-button">Add Event</button>
+        </form>
+      </div>
+      
+      <button id="sign-out-button" class="secondary-button">Sign Out</button>
+    </div>
+  </body>
+</html>
