@@ -86,7 +86,7 @@ h2 {
 }
 
 #message-box {
-  width: 100%;
+  width: 20em;
   height: auto;
 }
 
@@ -94,10 +94,11 @@ h2 {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  gap: 0px;
   align-items: center;
+  justify-content: center;
   overflow: hidden;
   position: relative;
+  margin-top: 20px;
 }
 
 #pet-speech {
@@ -106,38 +107,39 @@ h2 {
   color: #B9255E; 
   font-family: 'Pixelify Sans';
   font-size: 1.5em;
-  bottom: 8%;
+  bottom: 2em;
+  left: 0.7em;
 }
 
 .message-and-text {
   position: relative;
 }
 
-  .app-content {
+  /* .app-content {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     padding: 0;
     margin: 0 auto;
     max-width: 100%; 
-  }
+  } */
 
-  .left-column {
-    flex: 1; /* Each column takes half the space */
+  /* .left-column {
+    flex: 1; 
     padding: 20px;
   }
   .right-column {
-    flex: 1; /* Each column takes half the space */
+    flex: 1;
     padding: 20px;
-  }
+  } */
   /* Section Styling */
-  .section {
+  /* .section {
     background-color: var(#FF779E);
-    border-radius: var(#FF779E);
+    border-radius: 20% solid (#FF779E);
     padding: 20px;
     box-shadow: var(#FF779E);
-    color: white;
-  }
+    color: #FF779E;
+  } */
   
   .section-title {
     font-size: 1.5rem;
@@ -173,8 +175,38 @@ h2 {
     justify-content: center;
     align-items: center;
   }
+  .summary-section {
+    border-radius: 40px;
+    background-color: #FF779E;
+    color:#FFE2F1;
+    padding: 10px 20px;
+    box-shadow: 5px 5px 5px #7a7a7a;
+    font-family: 'Noto Serif Display';
+  }
   .summary-text {
-    font-size: 1.2rem;
+    font-size: 1.5em;
+    margin-top: -20px;
+  }
+
+  .upcoming-title {
+    border-radius: 40px;
+    background-color: #FF779E;
+    color:#FFE2F1;
+    padding: 10px 20px;
+    margin: 20px 0px;
+    box-shadow: 5px 5px 5px #7a7a7a;
+    font-family: 'Noto Serif Display';
+    font-size: 24px;
+  }
+
+  .upcoming-section {
+    border-radius: 40px;
+    background-color: #FF779E;
+    color:#FFE2F1;
+    padding: 10px 20px;
+    margin: 20px 0px;
+    box-shadow: 5px 5px 5px #7a7a7a;
+    font-family: 'Noto Serif Display';
   }
   
   /* Upcoming Events */
@@ -189,12 +221,13 @@ h2 {
   .events-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
+    margin: 20px 0px;
   }
   
   .event-item {
     background-color: rgba(255, 255, 255, 0.7);
-    border-radius: 20px;
+    border-radius: 50px;
     padding: 12px 20px;
     display: flex;
     justify-content: space-between;
@@ -213,13 +246,22 @@ h2 {
   
   /* Add Event Section */
   .add-event-section {
-    display: flex;
+    /* display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center; */
+    border-radius: 40px;
+    background-color: #FF779E;
+    color:#FFE2F1;
+    padding: 10px 20px;
+    margin: 20px 0px;
+    box-shadow: 5px 5px 5px #7a7a7a;
+    font-family: 'Noto Serif Display';
+    font-size: 24px;
+    justify-content: center;
   }
   
   #add-event-button {
-    background-color: #9D3C5C;
+    background-color: #B9255E;
     color: white;
     border: none;
     border-radius: 25px;
@@ -227,11 +269,26 @@ h2 {
     font-size: 1.2rem;
     cursor: pointer;
     transition: background-color 0.3s;
-    margin-top: 10px;
+    margin-bottom: 20px;
+    margin-top: -20px;
+  }
+
+  .secondary-button {
+    background-color: #B9255E;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
   }
   
   #add-event-button:hover {
-    background-color: #7D2B46;
+    background-color: #b9094c;
+  }
+  .secondary-button:hover {
+    background-color: #b9094c;
   }
   
   /* Form Styling */
@@ -250,10 +307,17 @@ h2 {
   }
   
   .form-group input {
-    width: 100%;
+    width: 85%;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    background-color: #FFFFE7;
+    color: #B9255E;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    cursor: pointer;
   }
   
   .submit-button, .cancel-button {
@@ -273,17 +337,6 @@ h2 {
   .cancel-button {
     background-color: #ccc;
     color: #333;
-  }
-  
-  /* Secondary Button */
-  .secondary-button {
-    background-color: #ccc;
-    color: #333;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 1rem;
-    cursor: pointer;
   }
   
   /* Utils */

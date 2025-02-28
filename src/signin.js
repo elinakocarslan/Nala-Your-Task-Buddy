@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   });
+  
   // set window to home screen
   function redirectToHomepage() {
     setTimeout(() => {

@@ -102,35 +102,3 @@ async function fetchCalendarEvents() {
       });
     });
   }
-  
-  // Function to delete a calendar event
-  async function deleteCalendarEvent(eventId) {
-    return new Promise((resolve, reject) => {
-      chrome.storage.local.get(['authToken'], async function(result) {
-        if (!result.authToken) {
-          reject(new Error('Not authenticated'));
-          return;
-        }
-  
-        try {
-          // Make API request to delete event
-          const response = await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`, {
-            method: 'DELETE',
-            headers: {
-              'Authorization': `Bearer ${result.authToken}`
-            }
-          });
-          
-          if (!response.ok && response.status !== 204) {
-            const errorData = await response.json();
-            throw new Error(errorData.error.message || 'Failed to delete event');
-          }
-          
-          resolve(true);
-        } catch (error) {
-          console.error('Error deleting calendar event:', error);
-          reject(error);
-        }
-      });
-    });
-  }

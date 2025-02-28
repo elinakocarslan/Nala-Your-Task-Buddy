@@ -2,6 +2,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const eventsContainer = document.getElementById('events-container');
     const addEventForm = document.getElementById('add-event-form');
+    const addEventButton = document.getElementById('add-event-button');
     const signOutButton = document.getElementById('sign-out-button');
     const petImage = document.getElementById('nala-homescreen');
     const petSpeech = document.getElementById('pet-speech');
@@ -81,11 +82,20 @@ document.addEventListener('DOMContentLoaded', function() {
       });
       
       // Add event listeners to delete buttons
-      const deleteButtons = document.querySelectorAll('.delete-button');
-      deleteButtons.forEach(button => {
-        button.addEventListener('click', handleDeleteEvent);
-      });
+    //   const deleteButtons = document.querySelectorAll('.delete-button');
+    //   deleteButtons.forEach(button => {
+    //     button.addEventListener('click', handleDeleteEvent);
+    //   });
     }
+
+    addEventButton.addEventListener('click', function() {
+        // Check if the form is currently hidden
+        if (addEventForm.classList.contains('hidden')) {
+            addEventForm.classList.remove('hidden'); // Show the form
+        } else {
+            addEventForm.classList.add('hidden'); // Hide the form
+        }
+    });
     
     // Handle form submission to create new event
     addEventForm.addEventListener('submit', async function(e) {
@@ -108,20 +118,6 @@ document.addEventListener('DOMContentLoaded', function() {
         changePetMessage("Oops! I couldn't create your event.");
       }
     });
-    
-    // Handle event deletion
-    async function handleDeleteEvent(e) {
-      const eventId = e.target.getAttribute('data-event-id');
-      
-      try {
-        await deleteCalendarEvent(eventId);
-        changePetMessage("Task removed successfully!");
-        loadEvents(); // Reload events
-      } catch (error) {
-        console.error('Error deleting event:', error);
-        changePetMessage("Oops! I couldn't delete that task.");
-      }
-    }
     
     // Handle sign out
     signOutButton.addEventListener('click', function() {
