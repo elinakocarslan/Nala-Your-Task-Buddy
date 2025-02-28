@@ -10,52 +10,306 @@
   font-weight: normal;
   font-style: normal;
 }
+#nala {
+  width: 50%;
+  height: 50%;
+}
+
+.img-and-text-container {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+}
+
+.text-and-button-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-right: 5%;
+}
 
 body {
-    font-family: Arial, sans-serif;
-    padding: 10px;
-    width: 300px;
-    background-color: #FFC0D1;
+  background-color: #FFFFE7;
+  font-family: 'Noto Serif Display';
+  }
+
+.container {
+  width: 30em;
+  height: 20em;
+}
+  
+h1 {
+  margin-bottom: 10px;
+  font-family: 'Pixelify Sans';
+  font-size: 12vh;
+  padding: 0;
+  color: #FF779E;
+  text-align: center;
+}
+
+button {
+  margin: 5px;
+  padding: 8px 30px;
+  background-color: #FF779E;
+  color: white;
+  border: none;
+  border-radius: 2em;
+  cursor: pointer;
+  font-family: 'Noto Serif Display';
+  font-size: 1.2em;
+  color: #FFE2F1;
+}
+
+button:hover {
+  background-color: #B9255E;
+}
+
+/* home page css */
+#home-page-html {
+  width: 30em;
+  height: 20em;
+}
+
+h2 {
+  font-family: 'Pixelify Sans';
+  font-size: 6vh;
+  color: #FF779E;
+  margin: 0px;
+  margin-right: -10%;
+}
+
+#nala-home-page {
+  width: 70%;
+  height: 70%;
+  margin: -5em;
+}
+
+#message-box {
+  width: 100%;
+  height: auto;
+}
+
+.nala-and-message {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 0px;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+#pet-speech {
+  position: absolute;
+  text-align: center;
+  color: #B9255E; 
+  font-family: 'Pixelify Sans';
+  font-size: 1.5em;
+  bottom: 8%;
+}
+
+.message-and-text {
+  position: relative;
+}
+
+  .app-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 100%; 
+  }
+
+  .left-column {
+    flex: 1; /* Each column takes half the space */
+    padding: 20px;
+  }
+  .right-column {
+    flex: 1; /* Each column takes half the space */
+    padding: 20px;
+  }
+  /* Section Styling */
+  .section {
+    background-color: var(#FF779E);
+    border-radius: var(#FF779E);
+    padding: 20px;
+    box-shadow: var(#FF779E);
+    color: white;
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+    /* margin-bottom: 15px; */
+    font-weight: normal;
+  }
+  
+  /* To-Do List */
+  .to-do-list {
+    display: flex;
+    flex-direction: column;
+    /* gap: 10px; */
+  }
+  
+  .to-do-item {
+    display: flex;
+    align-items: center;
+    /* gap: 10px; */
+  }
+  
+  .to-do-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .to-do-item label {
+    font-size: 1.1rem;
+  }
+  
+  /* Pet Section */
+  .pet-container {
+    display: flex;
     justify-content: center;
     align-items: center;
   }
-  
-  h1 {
-    font-size: 18px;
-    margin-bottom: 10px;
-    font-family: 'Pixelify Sans';
-    font-size: 18vh;
-
+  .summary-text {
+    font-size: 1.2rem;
   }
   
-  #events-container {
+  /* Upcoming Events */
+  .date-display {
+    background-color: var(--primary-color);
+    /* padding: 10px; */
+    /* margin-bottom: 15px; */
+    text-align: center;
+    font-size: 1.2rem;
+  }
+  
+  .events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .event-item {
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #333;
+  }
+  
+  .event-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+  
+  .event-time {
+    font-size: 1rem;
+  }
+  
+  /* Add Event Section */
+  .add-event-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  #add-event-button {
+    background-color: #9D3C5C;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+  }
+  
+  #add-event-button:hover {
+    background-color: #7D2B46;
+  }
+  
+  /* Form Styling */
+  #add-event-form {
+    width: 100%;
     margin-top: 20px;
   }
   
-  #events-list {
-    list-style-type: none;
-    padding: 0;
+  .form-group {
+    margin-bottom: 15px;
   }
   
-  #events-list li {
-    margin: 5px 0;
-    padding: 5px;
-    background-color: #f0f0f0;
-    border-radius: 3px;
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
   }
   
-  button {
-    margin: 5px;
-    padding: 8px 12px;
-    background-color: #4caf50;
-    color: white;
+  .form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .submit-button, .cancel-button {
+    padding: 10px 20px;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-right: 10px;
+  }
+  
+  .submit-button {
+    background-color: #9D3C5C;
+    color: white;
+  }
+  
+  .cancel-button {
+    background-color: #ccc;
+    color: #333;
+  }
+  
+  /* Secondary Button */
+  .secondary-button {
+    background-color: #ccc;
+    color: #333;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
     cursor: pointer;
   }
   
-  button:hover {
-    background-color: #45a049;
+  /* Utils */
+  .hidden {
+    display: none;
+  }
+  
+  /* Animation */
+  .bounce {
+    animation: bounce 0.5s;
+  }
+  
+  @keyframes bounce {
+    0%, 100% {
+      transform: translate(-50%, -50%);
+    }
+    50% {
+      transform: translate(-50%, -60%);
+    }
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .app-content {
+      flex-direction: column;
+    }
   }
 
   

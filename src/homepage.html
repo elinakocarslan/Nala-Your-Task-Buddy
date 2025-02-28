@@ -1,56 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html id="home-page-html">
   <head>
     <meta charset="UTF-8">
     <title>Nala - Your Tasks</title>
-    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="style.css">
     <script src="calendar-api.js" defer></script>
     <script src="homepage.js" defer></script>
   </head>
   <body>
-    <div class="container">
-      <div class="pet-container">
-        <img src="assets/nala.png" alt="Nala Pet" id="pet-image">
-        <div class="speech-bubble" id="pet-speech">
-          Hi there! Let's organize your day!
+    <div class="app-content">
+        <h2>Nala, your Task Buddy!</h2>
+        <!-- Left Column -->
+        <div class="left-column">
+            <!-- To-Do List Section -->
+            <div class="section to-do-section">
+              <h2 class="section-title">to-do list</h2>
+              <div class="to-do-list">
+                <div class="to-do-item">
+                  <input type="checkbox" id="task1">
+                  <label for="task1">go to yoga</label>
+                </div>
+                <div class="to-do-item">
+                  <input type="checkbox" id="task2">
+                  <label for="task2">journal</label>
+                </div>
+                <div class="to-do-item">
+                  <input type="checkbox" id="task3">
+                  <label for="task3">plan for the week</label>
+                </div>
+                <div class="to-do-item">
+                  <input type="checkbox" id="task4">
+                  <label for="task4">meal prep</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pet Container -->
+            <div class="pet-container">
+                <div class="nala-and-message">
+                    <div class="message-and-text">
+                        <h2 id="pet-speech"></h2>
+                        <img src="/assets/message-box.png" alt="Message Box" id="message-box">
+                    </div>
+                    <img src="/assets/nala.png" alt="Nala Pet" id="nala-home-page">
+                </div>
+            </div>
+      
+            <!-- Summary Section -->
+            <div class="section summary-section">
+                <h2 class="section-title">summary:</h2>
+                <p class="summary-text">You've had 3 classes & 5 assignments due.</p>
+            </div>
         </div>
-      </div>
-      
-      <h1>Your Tasks</h1>
-      
-      <div class="calendar-section">
-        <h2>Today's Events</h2>
-        <div id="events-container" class="events-list">
-          <p id="loading-message">Loading your events...</p>
+        <!-- Right Column -->
+        <div class="right-column">
+            <!-- Upcoming Events Section -->
+            <div class="section upcoming-section">
+            <h2 class="section-title">upcoming...</h2>
+            <div class="date-display">today, february 20th</div>
+            
+            <!-- This is where calendar events will be dynamically loaded -->
+            <div id="events-container" class="events-list">
+                <p id="loading-message">Loading your events...</p>
+            </div>
+            </div>
+            
+            <!-- Add Event Section -->
+            <div class="section add-event-section">
+                <h2 class="section-title">Create event to calendar:</h2>
+                <button id="add-event-button" class="primary-button">Add event</button>
+                
+                <!-- Event Form - Hidden by default, shown when Add Event is clicked -->
+                <form id="add-event-form" class="hidden">
+                <div class="form-group">
+                    <label for="event-title">Title:</label>
+                    <input type="text" id="event-title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="event-date">Date:</label>
+                    <input type="date" id="event-date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="event-time">Time:</label>
+                    <input type="time" id="event-time" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="event-duration">Duration (minutes):</label>
+                    <input type="number" id="event-duration" value="30" min="5" max="1440" required>
+                </div>
+                
+                <button type="submit" class="submit-button">Save</button>
+                <button type="button" id="cancel-button" class="cancel-button">Cancel</button>
+                </form>
+            </div>
+            </div>
         </div>
-      </div>
-      
-      <div class="add-event-section">
-        <h2>Add New Event</h2>
-        <form id="add-event-form">
-          <div class="form-group">
-            <label for="event-title">Title:</label>
-            <input type="text" id="event-title" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="event-date">Date:</label>
-            <input type="date" id="event-date" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="event-time">Time:</label>
-            <input type="time" id="event-time" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="event-duration">Duration (minutes):</label>
-            <input type="number" id="event-duration" value="30" min="5" max="1440" required>
-          </div>
-          
-          <button type="submit" class="primary-button">Add Event</button>
-        </form>
-      </div>
       
       <button id="sign-out-button" class="secondary-button">Sign Out</button>
     </div>

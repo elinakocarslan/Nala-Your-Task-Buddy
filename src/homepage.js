@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const eventsContainer = document.getElementById('events-container');
     const addEventForm = document.getElementById('add-event-form');
     const signOutButton = document.getElementById('sign-out-button');
-    const petImage = document.getElementById('pet-image');
+    const petImage = document.getElementById('nala-homescreen');
     const petSpeech = document.getElementById('pet-speech');
     
     // Check authentication
