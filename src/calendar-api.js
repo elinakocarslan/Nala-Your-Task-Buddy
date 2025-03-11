@@ -58,14 +58,21 @@ async function fetchCalendarEvents() {
         }
   
         try {
-          const eventDate = new Date(eventDetails.date);
+          const eventDate = new Date(eventDetails.date + 'T' + eventDetails.time + ':00'); // Explicitly create Date object in local time
+          console.log('Event Date:', eventDetails.date); // Original date from frontend
+          console.log('Event Date object:', eventDate); // Event date after processing
+  
+          // Adjust the eventDate to local time zone manually
           const [hours, minutes] = eventDetails.time.split(':');
           eventDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-          
+          console.log('Updated Event Date:', eventDate);
+
           // Calculate end time based on duration
           const endDate = new Date(eventDate);
-          endDate.setMinutes(endDate.getMinutes() + parseInt(eventDetails.duration));
-          
+          endDate.setMinutes(eventDate.getMinutes() + parseInt(eventDetails.duration));
+          endDate.setHours(endDate.getHours(), endDate.getMinutes(), 0, 0);
+          console.log('End Date:', endDate);
+
           const event = {
             summary: eventDetails.title,
             start: {
@@ -77,7 +84,7 @@ async function fetchCalendarEvents() {
               timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
             }
           };
-          
+
           // Make API request to create event
           const response = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
             method: 'POST',
@@ -92,7 +99,7 @@ async function fetchCalendarEvents() {
             const errorData = await response.json();
             throw new Error(errorData.error.message || 'Failed to create event');
           }
-          
+
           const data = await response.json();
           resolve(data);
         } catch (error) {
