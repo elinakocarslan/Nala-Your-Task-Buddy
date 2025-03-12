@@ -82,10 +82,10 @@ document.addEventListener('DOMContentLoaded', function() {
       });
       
       // Add event listeners to delete buttons
-    //   const deleteButtons = document.querySelectorAll('.delete-button');
-    //   deleteButtons.forEach(button => {
-    //     button.addEventListener('click', handleDeleteEvent);
-    //   });
+      const deleteButtons = document.querySelectorAll('.delete-button');
+      deleteButtons.forEach(button => {
+        button.addEventListener('click', handleDeleteEvent);
+      });
     }
 
     addEventButton.addEventListener('click', function() {
@@ -118,6 +118,19 @@ document.addEventListener('DOMContentLoaded', function() {
         changePetMessage("Oops! I couldn't create your event.");
       }
     });
+
+    async function handleDeleteEvent(e) {
+      const eventId = e.target.getAttribute('data-event-id');
+      
+      try {
+        await deleteCalendarEvent(eventId);
+        changePetMessage("Task removed successfully!");
+        loadEvents(); // Reload events
+      } catch (error) {
+        console.error('Error deleting event:', error);
+        changePetMessage("Oops! I couldn't delete that task.");
+      }
+    }
     
     // Handle sign out
     signOutButton.addEventListener('click', function() {
