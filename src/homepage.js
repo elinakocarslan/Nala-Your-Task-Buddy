@@ -83,9 +83,9 @@ document.addEventListener('DOMContentLoaded', function() {
         eventsContainer.appendChild(eventElement);
       });
       if (eventCount === 1) {
-        summaryText.textContent = `You've had ${eventCount} class today.`;
+        summaryText.textContent = `You've have ${eventCount} class today.`;
       } else {
-        summaryText.textContent = `You've had ${eventCount} events today.`;  
+        summaryText.textContent = `You've have ${eventCount} events today.`;  
       } 
       // Display current date
       const date = new Date();
