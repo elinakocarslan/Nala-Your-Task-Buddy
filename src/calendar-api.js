@@ -1,5 +1,3 @@
-// scripts/calendar-api.js
-
 // Function to fetch calendar events from Google Calendar API
 async function fetchCalendarEvents() {
     return new Promise((resolve, reject) => {

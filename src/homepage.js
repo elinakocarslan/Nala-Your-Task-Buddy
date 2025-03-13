@@ -1,4 +1,3 @@
-// scripts/homepage.js
 document.addEventListener('DOMContentLoaded', function() {
     const eventsContainer = document.getElementById('events-container');
     const addEventForm = document.getElementById('add-event-form');
@@ -6,6 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const signOutButton = document.getElementById('sign-out-button');
     const petImage = document.getElementById('nala-homescreen');
     const petSpeech = document.getElementById('pet-speech');
+    const summaryText = document.getElementById('summary-text');
+    const currDate = document.getElementById('date-display');
     
     // Check authentication
     chrome.storage.local.get(['authToken'], function(result) {
@@ -64,7 +65,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Render events to the UI
     function renderEvents(events) {
       eventsContainer.innerHTML = '';
-      
+      let eventCount = events.length;
+
       events.forEach(event => {
         const eventElement = document.createElement('div');
         eventElement.className = 'event-item';
@@ -80,7 +82,17 @@ document.addEventListener('DOMContentLoaded', function() {
         
         eventsContainer.appendChild(eventElement);
       });
-      
+      if (eventCount === 1) {
+        summaryText.textContent = `You've had ${eventCount} class today.`;
+      } else {
+        summaryText.textContent = `You've had ${eventCount} events today.`;  
+      } 
+      // Display current date
+      const date = new Date();
+      const formatter = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+      const formattedDate = formatter.format(date);
+      currDate.textContent = `${formattedDate}`;
+    
       // Add event listeners to delete buttons
       const deleteButtons = document.querySelectorAll('.delete-button');
       deleteButtons.forEach(button => {
