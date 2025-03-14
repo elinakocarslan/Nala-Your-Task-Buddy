@@ -86,7 +86,7 @@ h2 {
 }
 
 #message-box {
-  width: 20em;
+  width: 25em;
   height: auto;
 }
 
@@ -107,8 +107,8 @@ h2 {
   color: #B9255E; 
   font-family: 'Pixelify Sans';
   font-size: 1.5em;
-  bottom: 2em;
-  left: 0.7em;
+  bottom: 3em;
+  left: 1em;
 }
 
 .message-and-text {

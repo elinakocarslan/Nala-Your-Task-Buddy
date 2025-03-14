@@ -2,6 +2,7 @@ async function fetchCalendarEvents() {
   return new Promise((resolve, reject) => {
     chrome.storage.local.get(['authToken'], async function(result) {
       if (!result.authToken) {
+        window.location.href = 'signinpage.html';
         reject(new Error('Not authenticated'));
         return;
       }
@@ -57,6 +58,7 @@ async function fetchCalendarEvents() {
             console.warn(`Failed to fetch events from calendar: ${calendarId}`);
           }
         }
+        // Sort events by start time
         allEvents.sort((a, b) => {
           const timeA = a.start.dateTime ? new Date(a.start.dateTime).getTime() : Infinity; // Timed events have real timestamps
           const timeB = b.start.dateTime ? new Date(b.start.dateTime).getTime() : Infinity; // All-day events = Infinity

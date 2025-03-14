@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
       "Don't forget to take breaks!",
       "You're doing great today!",
       "Remember to drink water!",
-      "One task at a time, you got this!",
+      "One task at a time, you got it!",
       "Your schedule is looking good!"
     ];
     
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       setTimeout(() => {
         petSpeech.classList.remove('bounce');
-      }, 1000);
+      }, 10000000);
     }
     
     // Load calendar events
@@ -49,16 +49,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const events = await fetchCalendarEvents();
         
         if (events.length === 0) {
-          eventsContainer.innerHTML = '<p class="no-events">No events scheduled for today</p>';
+          // eventsContainer.innerHTML = '<p class="no-events">No events scheduled for today</p>';
           changePetMessage("Your day is clear! Want to add something?");
         } else {
           renderEvents(events);
-          changePetMessage(`You have ${events.length} task${events.length > 1 ? 's' : ''} today!`);
+          changePetMessage(`You have ${events.length} event${events.length > 1 ? 's' : ''} today!`);
         }
       } catch (error) {
         console.error('Error loading events:', error);
         eventsContainer.innerHTML = `<p class="error-message">Error loading events: ${error.message}</p>`;
-        changePetMessage("Oops! I couldn't fetch your events.");
+        changePetMessage("Oops! Try signing out and back in.");
       }
     }
     
