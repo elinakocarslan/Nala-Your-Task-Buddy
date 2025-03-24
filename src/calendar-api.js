@@ -18,7 +18,7 @@ async function fetchCalendarEvents() {
         
         // Format dates in RFC3339 format
         const timeMin = today.toISOString();
-        const timeMax = tomorrow.toISOString();
+        const timeMax = tomorrow.toISOString();        
 
         // 1. Get the list of all calendars
         const calendarListUrl = `https://www.googleapis.com/calendar/v3/users/me/calendarList`;
@@ -74,8 +74,7 @@ async function fetchCalendarEvents() {
     });
   });
 }
-
-  
+ 
   // Function to create a new calendar event
   async function createCalendarEvent(eventDetails) {
     return new Promise((resolve, reject) => {

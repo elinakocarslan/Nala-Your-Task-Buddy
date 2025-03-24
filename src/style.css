@@ -147,28 +147,92 @@ h2 {
     font-weight: normal;
   }
   
-  /* To-Do List */
-  .to-do-list {
-    display: flex;
-    flex-direction: column;
-    /* gap: 10px; */
+
+  .to-do-section {
+    border-radius: 40px;
+    background-color: #FF779E;
+    color:#FFE2F1;
+    padding: 10px 20px;
+    box-shadow: 5px 5px 5px #7a7a7a;
+    font-family: 'Noto Serif Display';
   }
-  
-  .to-do-item {
+
+  #add-task-form {
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: horizontal;
+  }
+
+  #to-do-item {
     display: flex;
     align-items: center;
+    width: 100%;
+    margin: 1.5%;
     /* gap: 10px; */
+    border-radius: 50px;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #B9255E; 
   }
   
-  .to-do-item input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
+  ::placeholder{
+    color: #B9255E;
+  }
+
+  #to-do-submit {
+    background-color: #B9255E;
+    color: white;
+  }
+
+  #to-do-submit:hover {
+    background-color: #b9094c;
+  }
+
+  
+  #to-do-item input[type="checkbox"] {
+    background-color: rgba(255, 255, 255, 0.7);
+    border-color: #B9255E;
+    color: aqua;
+  }
+
+  .delete-task-button {
+    background-color: #FFFFE7;
+    color: #B9255E;
+    padding: 5px 15px;
+  }
+
+  .delete-task-button:hover {
+    background-color: #ebebd6;
+    color: #B9255E;
+  }
+
+  .task-content {
+    display: flex;
+    flex-direction: row;
+  }
+  .task-checkbox {
+    /* background-color: #FFE2F1; */
+    border-color: #B9255E;
+    background-color: aqua;
+    top:0px;
   }
   
-  .to-do-item label {
-    font-size: 1.1rem;
+  .task-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 50px;
+    padding: 12px 20px;
+    display: flex;
+    vertical-align: middle;
+    color: #333;
+    font-size: 1.2em;
   }
-  
+
   /* Pet Section */
   .pet-container {
     display: flex;

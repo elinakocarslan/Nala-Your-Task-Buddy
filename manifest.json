@@ -21,7 +21,8 @@
         "scopes": [
           "https://www.googleapis.com/auth/calendar.readonly", 
           "https://www.googleapis.com/auth/calendar.events",
-          "https://www.googleapis.com/auth/calendar.events.owned" 
+          "https://www.googleapis.com/auth/calendar.events.owned",
+          "https://www.googleapis.com/auth/tasks"
         ]
     },
     "host_permissions": ["http://*/*", "https://*/*"],

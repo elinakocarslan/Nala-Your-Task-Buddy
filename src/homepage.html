@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="calendar-api.js" defer></script>
     <script src="homepage.js" defer></script>
+    <script src="to-do.js" defer></script>
   </head>
   <body>
     <div class="app-content">
@@ -13,12 +14,13 @@
         <!-- Left Column -->
         <div class="left-column">
             <!-- To-Do List Section -->
-             <div class="section to-do-section">
-              <h2 class="section-title">to-do list</h2>
-              <div class="to-do-list">
-                <div id="to-do-item">
-                  <!-- <input type="text" id="taskInput" placeholder="Add a new task" />
-                   -->
+            <h3 class="upcoming-title">to-do list...</h3>
+            <div class="to-do-section">
+                <form class="form-group" id="add-task-form">
+                    <input type="text" id="to-do-item" placeholder="Enter task here..." required />
+                    <button id="to-do-submit" type="submit">Add Task</button>
+                    </form>
+                  <div class="events-list" id="to-do-list"></div>
             </div>
 
             <!-- Pet Container -->

@@ -7,6 +7,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const petSpeech = document.getElementById('pet-speech');
     const summaryText = document.getElementById('summary-text');
     const currDate = document.getElementById('date-display');
+    const deleteButtons = document.querySelectorAll('.delete-button');
+    const addTaskForm = document.getElementById('add-task-form');
+    const taskTitleInput = document.getElementById('task-title');
+    const toDoList = document.getElementById('to-do-list');
+
+
     
     // Check authentication
     chrome.storage.local.get(['authToken'], function(result) {
@@ -17,7 +23,132 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Load events
       loadEvents();
+      loadTasks();
+
+      if (addTaskForm) {
+        addTaskForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const taskTitle = taskTitleInput.value.trim();
+          if (taskTitle) {
+            addTask(taskTitle);
+            taskTitleInput.value = '';
+            
+          }
+        });
+      }
     });
+    function addTask(title) {
+      // Get existing tasks
+      let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+      
+      // Create new task
+      const newTask = {
+        id: Date.now().toString(),
+        title: title,
+        completed: false,
+        createdAt: new Date().toISOString()
+      };
+      
+      // Add to tasks array
+      tasks.push(newTask);
+      
+      // Save to local storage
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      
+      // Render tasks
+      renderTasks();
+    }
+    
+    // Function to delete a task
+    function deleteTask(taskId) {
+      // Get existing tasks
+      let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+      
+      // Filter out the task to delete
+      tasks = tasks.filter(task => task.id !== taskId);
+      
+      // Save to local storage
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      
+      // Render tasks
+      renderTasks();
+    }
+    
+    // Function to toggle task completion
+    function toggleTaskCompletion(taskId) {
+      // Get existing tasks
+      let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+      
+      // Find and update the task
+      tasks = tasks.map(task => {
+        if (task.id === taskId) {
+          return { ...task, completed: !task.completed };
+        }
+        return task;
+      });
+      
+      // Save to local storage
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      
+      // Render tasks
+      renderTasks();
+    }
+    
+    // Function to load and render tasks
+    function loadTasks() {
+      renderTasks();
+    }
+    
+    // Function to render tasks
+    function renderTasks() {
+      if (!toDoList) return;
+      
+      // Get tasks from local storage
+      const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+      
+      // Clear the container
+      toDoList.innerHTML = '';
+      
+      if (tasks.length === 0) {
+        toDoList.innerHTML = '<p>No tasks to display</p>';
+        return;
+      }
+      tasks.forEach(task => {
+        const taskElement = document.createElement('div');
+        taskElement.className = 'task-item';
+        
+        // Create checkbox
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'task-checkbox';
+        checkbox.checked = task.completed;
+        checkbox.addEventListener('change', () => toggleTaskCompletion(task.id));
+        
+        // Create task content
+        const taskContent = document.createElement('div');
+        taskContent.className = 'task-content';
+        
+        const taskTitle = document.createElement('div');
+        taskTitle.className = `task-title ${task.completed ? 'completed' : ''}`;
+        taskTitle.textContent = task.title;
+        
+        taskContent.appendChild(taskTitle);
+        
+        // Create delete button
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'delete-task-button';
+        deleteButton.textContent = 'x';
+        deleteButton.addEventListener('click', () => deleteTask(task.id));
+        
+        // Assemble the task item
+        taskElement.appendChild(checkbox);
+        taskElement.appendChild(taskContent);
+        taskElement.appendChild(deleteButton);
+        
+        toDoList.appendChild(taskElement);
+      });
+    }
     
     // Pet animations and messages
     const petMessages = [
@@ -94,7 +225,6 @@ document.addEventListener('DOMContentLoaded', function() {
       currDate.textContent = `${formattedDate}`;
     
       // Add event listeners to delete buttons
-      const deleteButtons = document.querySelectorAll('.delete-button');
       deleteButtons.forEach(button => {
         button.addEventListener('click', handleDeleteEvent);
       });
