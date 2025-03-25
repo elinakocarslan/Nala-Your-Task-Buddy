@@ -192,11 +192,43 @@ document.addEventListener('DOMContentLoaded', function() {
         changePetMessage("Oops! Try signing out and back in.");
       }
     }
+    //to get completed events of day
+    function getEventSummary(events) {
+      const now = new Date();
+      
+      const summary = {
+        totalEvents: events.length,
+        completedEvents: 0,
+        pendingEvents: 0,
+        completedPercentage: 0,
+        upcomingEvents: [],
+        pastEvents: []
+      };
+    
+      events.forEach(event => {
+        const eventEnd = new Date(event.end.dateTime || event.end.date);
+        
+        if (eventEnd < now) {
+          // Event has passed its end time
+          summary.completedEvents++;
+          summary.pastEvents.push(event);
+        } else {
+          summary.pendingEvents++;
+          summary.upcomingEvents.push(event);
+        }
+      });
+    
+      summary.completedPercentage = 
+        Math.round((summary.completedEvents / summary.totalEvents) * 100);
+    
+      return summary;
+    }
+    
     
     // Render events to the UI
     function renderEvents(events) {
       eventsContainer.innerHTML = '';
-      let eventCount = events.length;
+      // let eventCount = events.length;
 
       events.forEach(event => {
         const eventElement = document.createElement('div');
@@ -213,10 +245,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         eventsContainer.appendChild(eventElement);
       });
-      if (eventCount === 1) {
-        summaryText.textContent = `You've have ${eventCount} class today.`;
+      let summary = getEventSummary(events);
+      if (events.length === 1) {
+        summaryText.textContent = `You've have completed ${summary.completedEvents} out of ${summary.totalEvents} event today. ${summary.completedPercentage}% completed.`;
       } else {
-        summaryText.textContent = `You've have ${eventCount} events today.`;  
+        summaryText.textContent = `You've have completed ${summary.completedEvents} out of ${summary.totalEvents} events today. ${summary.completedPercentage}% completed.`;  
       } 
       // Display current date
       const date = new Date();
