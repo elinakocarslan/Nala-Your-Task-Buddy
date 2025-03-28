@@ -11,15 +11,45 @@ document.addEventListener('DOMContentLoaded', function() {
     const addTaskForm = document.getElementById('add-task-form');
     const taskTitleInput = document.getElementById('task-title');
     const toDoList = document.getElementById('to-do-list');
+    const loader = document.getElementById('loader');
+    const loaderContent = document.getElementById('loader-content');
+    const appContent = document.getElementById('app-content');
+    const loadingText = document.getElementById('loading-text');
 
+    function showLoader() {
+      loaderContent.style.display = 'flex'; 
+      // appContent.style.display = 'none'; 
+    }
 
-    
+    function hideLoader() {
+      loaderContent.style.display = 'none'; 
+      // appContent.style.display = 'flex'; 
+    }
+  // showLoader();
     // Check authentication
     chrome.storage.local.get(['authToken'], function(result) {
-      if (!result.authToken) {
+      // showLoader();
+
+      if (!result.authToken) { // make authoken check a function
         window.location.href = 'signinpage.html';
         return;
       }
+      // hideLoader();
+
+      let index = 0;
+      const typingSpeed = 200; 
+      const text = "Loading..."; 
+      
+      loadingText.textContent = '';
+
+      function typeText(_index, _text) {
+        if (index < text.length) {
+          loadingText.textContent += text.charAt(index);
+          index++;
+          setTimeout(typeText, typingSpeed); 
+        }
+      }
+      typeText(index, text);
       
       // Load events
       loadEvents();
@@ -38,11 +68,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       }
     });
+
     function addTask(title) {
-      // Get existing tasks
       let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
       
-      // Create new task
       const newTask = {
         id: Date.now().toString(),
         title: title,
@@ -50,34 +79,25 @@ document.addEventListener('DOMContentLoaded', function() {
         createdAt: new Date().toISOString()
       };
       
-      // Add to tasks array
       tasks.push(newTask);
       
-      // Save to local storage
       localStorage.setItem('tasks', JSON.stringify(tasks));
       
-      // Render tasks
       renderTasks();
     }
     
-    // Function to delete a task
     function deleteTask(taskId) {
-      // Get existing tasks
       let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
       
-      // Filter out the task to delete
       tasks = tasks.filter(task => task.id !== taskId);
       
-      // Save to local storage
       localStorage.setItem('tasks', JSON.stringify(tasks));
       
-      // Render tasks
       renderTasks();
     }
     
-    // Function to toggle task completion
     function toggleTaskCompletion(taskId) {
-      // Get existing tasks
+      // Get  tasks
       let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
       
       // Find and update the task
@@ -97,11 +117,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function to load and render tasks
     function loadTasks() {
-      renderTasks();
+      // showLoader(); 
+      renderTasks(); // Call renderTasks after loading (this could be async if needed)
+       // Hide the loader after loading tasks
     }
     
     // Function to render tasks
     function renderTasks() {
+      // hideLoader();
       if (!toDoList) return;
       
       // Get tasks from local storage
@@ -187,9 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
           changePetMessage(`You have ${events.length} event${events.length > 1 ? 's' : ''} today!`);
         }
       } catch (error) {
-        console.error('Error loading events:', error);
-        eventsContainer.innerHTML = `<p class="error-message">Error loading events: ${error.message}</p>`;
-        changePetMessage("Oops! Try signing out and back in.");
+        window.location.href = 'signinpage.html';
       }
     }
     //to get completed events of day
@@ -284,6 +305,7 @@ document.addEventListener('DOMContentLoaded', function() {
       };
       
       try {
+        // showLoader(); 
         await createCalendarEvent(eventDetails);
         addEventForm.reset();
         changePetMessage("Great! I've added your new task!");
@@ -291,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
       } catch (error) {
         console.error('Error creating event:', error);
         changePetMessage("Oops! I couldn't create your event.");
-      }
+      } 
     });
 
     async function handleDeleteEvent(e) {

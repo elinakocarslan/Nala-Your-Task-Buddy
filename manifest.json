@@ -9,7 +9,7 @@
         "default_title": "Task Managing Pet",
         "default_popup": "src/signinpage.html",
         "default_icon": {
-          "24": "assets/nala.png"
+          "24": "assets/realNala.png"
         }
     },
     "permissions": [

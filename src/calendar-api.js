@@ -30,6 +30,7 @@ async function fetchCalendarEvents() {
         });
 
         if (!calendarResponse.ok) {
+          // window.location.href = 'signinpage.html';
           throw new Error('Failed to fetch calendar list');
         }
 

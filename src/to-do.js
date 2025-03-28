@@ -20,6 +20,7 @@ async function fetchToDoList() {
           });
   
           if (!todoResponse.ok) {
+            // window.location.href = 'signinpage.html';
             throw new Error('Failed to fetch task list');
           }
   
