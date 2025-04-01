@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
           changePetMessage(`You have ${events.length} event${events.length > 1 ? 's' : ''} today!`);
         }
       } catch (error) {
-        window.location.href = 'signinpage.html';
+        // window.location.href = 'signinpage.html';
       }
     }
     //to get completed events of day
