@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <title>Nala - Your Tasks</title>
     <link rel="stylesheet" href="style.css">
-    <script src="calendar-api.js" defer></script>
-    <script src="homepage.js" defer></script>
-    <script src="to-do.js" defer></script>
+    <script type='module' src="homepage.js" defer></script>
+    <script type='module' src="calendar-api.js" defer></script>
+    <script type='module' src="to-do.js" defer></script>
+    <script src="../background.js" defer></script>
   </head>
   <body>
-    <div id="loader-container" class="loader-container">
+    <div id="loader-container" class="loader-container" >
         <img src="../assets/loader.gif" alt="Loading..." id="loader">
         <h2 id="loading-text"></h2>
     </div>

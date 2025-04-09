@@ -167,3 +167,5 @@ async function fetchCalendarEvents() {
       });
     });
   }
+
+  export { fetchCalendarEvents, deleteCalendarEvent, createCalendarEvent };

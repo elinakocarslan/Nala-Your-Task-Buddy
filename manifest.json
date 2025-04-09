@@ -14,7 +14,9 @@
     },
     "permissions": [
         "identity",
-        "storage"
+        "storage",
+        "notifications",
+        "alarms"
     ],
     "oauth2": {
         "client_id": "715072669994-acb9o3peb3sn1q9h9g89ihon5mkdda4e.apps.googleusercontent.com",
@@ -27,9 +29,9 @@
     },
     "host_permissions": ["http://*/*", "https://*/*"],
     "background": {
-        "service_worker": "background.js"
+       "service_worker": "background.js"
       },
       "content_security_policy": {
-        "extension_pages": "script-src 'self'; object-src 'self'; connect-src https://www.googleapis.com; default-src 'self';"
+        "extension_pages": "script-src 'self'; object-src 'self'; connect-src https://www.googleapis.com 'self'; default-src 'self';"
       }
 }

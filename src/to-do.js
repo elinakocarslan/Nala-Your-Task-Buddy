@@ -1,63 +1,65 @@
-
+let tasksSummaryData = {
+  totalTasks: 0,
+  completedTasks: 0,
+  completedPercentage: 0
+};
 async function fetchToDoList() {
-    return new Promise((resolve, reject) => {
-      chrome.storage.local.get(['authToken'], async function(result) {
-        if (!result.authToken) {
-          window.location.href = 'signinpage.html';
-          reject(new Error('Not authenticated'));
-          return;
-        }
-  
-        try {     
-  
-          // 1. Get the list of all calendars
-          const todoURL = `https://www.googleapis.com/tasks/v1/users/@me/lists`;
-          const todoResponse = await fetch(todoURL, {
-            headers: {
-              'Authorization': `Bearer ${result.authToken}`,
-              'Content-Type': 'application/json'
-            }
-          });
-  
-          if (!todoResponse.ok) {
-            // window.location.href = 'signinpage.html';
-            throw new Error('Failed to fetch task list');
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get(['authToken'], async function(result) {
+      if (!result.authToken) {
+        window.location.href = 'signinpage.html';
+        reject(new Error('Not authenticated'));
+        return;
+      }
+
+      try {     
+        // 1. Get the list of all calendars
+        const todoURL = `https://www.googleapis.com/tasks/v1/users/@me/lists`;
+        const todoResponse = await fetch(todoURL, {
+          headers: {
+            'Authorization': `Bearer ${result.authToken}`,
+            'Content-Type': 'application/json'
           }
-  
-          const listsData = await todoResponse.json();
-  
-  
-          // If no lists available, return empty array
-            if (!listsData.items || listsData.items.length === 0) {
-                resolve([]);
-                return;
-            }
-            
-            // Use the first list (usually default)
-            const defaultListId = listsData.items[0].id;
+        });
 
-                // 2. Now fetch tasks from the default list
-            const tasksURL = `https://www.googleapis.com/tasks/v1/lists/${defaultListId}/tasks`;
-            const tasksResponse = await fetch(tasksURL, {
-            headers: {
-                'Authorization': `Bearer ${result.authToken}`,
-                'Content-Type': 'application/json'
-            }
-            });
-
-            if (!tasksResponse.ok) {
-            throw new Error('Failed to fetch tasks');
-            }
-
-            const tasksData = await tasksResponse.json();
-            resolve(tasksData.items || []);
-        
-        } catch (error) {
-          console.error('Error fetching calendar events:', error);
-          reject(error);
+        if (!todoResponse.ok) {
+          // window.location.href = 'signinpage.html';
+          throw new Error('Failed to fetch task list');
         }
-      });
+
+        const listsData = await todoResponse.json();
+
+        // If no lists available, return empty array
+        if (!listsData.items || listsData.items.length === 0) {
+            resolve([]);
+            return;
+        }
+          
+        // Use the first list (usually default)
+        const defaultListId = listsData.items[0].id;
+
+        // 2. Now fetch tasks from the default list
+        const tasksURL = `https://www.googleapis.com/tasks/v1/lists/${defaultListId}/tasks`;
+        const tasksResponse = await fetch(tasksURL, {
+          headers: {
+            'Authorization': `Bearer ${result.authToken}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!tasksResponse.ok) {
+          throw new Error('Failed to fetch tasks');
+        }
+
+        const tasksData = await tasksResponse.json();
+        resolve(tasksData.items || []);
+      
+      } catch (error) {
+        console.error('Error fetching calendar events:', error);
+        reject(error);
+      }
     });
+  });
 }
 
   async function addTaskToList(taskDetails) {
@@ -163,7 +165,6 @@ async function fetchToDoList() {
       checkbox.checked = task.status === 'completed';
       checkbox.addEventListener('change', async () => {
         await updateTaskStatus(task.id, checkbox.checked ? 'completed' : 'needsAction');
-        // No need to reload tasks here as we're visually updating already
       });
       
       taskElement.innerHTML = `
@@ -340,7 +341,30 @@ async function fetchToDoList() {
       document.getElementById('to-do-list').innerHTML = `<p class="error-message">Error loading tasks: ${error.message}</p>`;
     }
   }
+
+  async function getTaskSummary() {
+    try {
+      const tasks = await fetchToDoList();
+      
+      const completedTasks = tasks ? tasks.filter(task => task.status === 'completed').length : 0;
+      const totalTasks = tasks ? tasks.length : 0;
+      const completedPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
   
+      // // Update the exported tasksSummaryData object
+      // tasksSummaryData = {
+      //   totalTasks: totalTasks,
+      //   completedTasks: completedTasks,
+      //   completedPercentage: completedPercentage
+      // };
+  
+      const summary = `You have ${totalTasks - completedTasks} tasks left to complete!`;
+      return summary;
+    } catch (error) {
+      console.error('Error loading tasks:', error);
+      return "Error loading tasks!";
+    }
+  }
+
   // Helper function to change pet message if it exists
   function changePetMessage(message) {
     const petSpeech = document.getElementById('pet-speech');
@@ -387,5 +411,5 @@ async function fetchToDoList() {
       loadTasks();
     });
   });
-  
+export { getTaskSummary, tasksSummaryData };
   
