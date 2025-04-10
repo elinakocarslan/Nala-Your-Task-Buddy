@@ -92,25 +92,25 @@ function getEventById(eventId) {
 }
 
 // Function to load events
-async function loadEvents() {
-  try {
-    // Replace this with your actual fetch logic
-    chrome.storage.local.get(['authToken', 'events'], async function(result) {
-      if (!result.authToken) {
-        console.error('No auth token available');
-        return;
-      }
+// async function loadEvents() {
+//   try {
+//     // Replace this with your actual fetch logic
+//     chrome.storage.local.get(['authToken', 'events'], async function(result) {
+//       if (!result.authToken) {
+//         console.error('No auth token available');
+//         return;
+//       }
       
-      const events = result.events || [];
+//       const events = result.events || [];
       
-      events.forEach(event => {
-        scheduleEventNotifications(event); // Schedule notifications for this event
-      });
-    });
-  } catch (error) {
-    console.error('Error loading events:', error);
-  }
-}
+//       events.forEach(event => {
+//         scheduleEventNotifications(event); // Schedule notifications for this event
+//       });
+//     });
+//   } catch (error) {
+//     console.error('Error loading events:', error);
+//   }
+// }
 
 // Periodically check for upcoming events every minute
 setInterval(() => {

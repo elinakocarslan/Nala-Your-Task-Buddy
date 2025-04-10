@@ -1,4 +1,4 @@
-import {getTaskSummary } from "./to-do.js";
+import {getTaskSummary, updateTaskStatus, fetchToDoList, addTaskToList, deleteTask } from "./to-do.js";
 import {fetchCalendarEvents, deleteCalendarEvent, createCalendarEvent} from "./calendar-api.js";
 
 
@@ -10,28 +10,28 @@ const petSpeech = document.getElementById('pet-speech');
 const summaryText = document.getElementById('summary-text');
 const currDate = document.getElementById('date-display');
 const addTaskForm = document.getElementById('add-task-form');
-const taskTitleInput = document.getElementById('task-title');
 const toDoList = document.getElementById('to-do-list');
 const loaderContent = document.getElementById('loader-content');
 const appContent = document.getElementById('app-content');
 const loadingText = document.getElementById('loading-text');
+const taskTitleInput = document.getElementById('to-do-item');
 
 let eventsSummaryData = null;
 let tasksSummaryData = null;
 
+//updates summary
 function updateSummary() {
   let summary = "";
   if (eventsSummaryData) {
     summary += `You've completed ${eventsSummaryData.completedEvents} out of ${eventsSummaryData.totalEvents} event${eventsSummaryData.totalEvents > 1 ? 's' : ''} today (${eventsSummaryData.completedPercentage}% completed).`;
   }
   if (tasksSummaryData) {
-    // summary += `\nYou've completed ${tasksSummaryData.completedTasks} out of ${tasksSummaryData.totalTasks} task${tasksSummaryData.totalTasks > 1 ? 's' : ''} (${tasksSummaryData.completedPercentage}% completed).`;
     summary += '\n' + tasksSummaryData;
   }
   summaryText.textContent = summary;
 }
 
-// Existing loader functions...
+//not working
 function showLoader() {
   if (loaderContent) {
     loaderContent.classList.add('show-loader');
@@ -56,7 +56,7 @@ function showLoader() {
   }
   typeText();
 }
-
+//not working
 function hideLoader() {
   if (loaderContent) {
     loaderContent.classList.add('hide-loader');
@@ -68,8 +68,121 @@ function hideLoader() {
   }
   console.log('Loader hidden');
 }
+//changes pet message
+function changePetMessage(message) {
+  petSpeech.textContent = message;
+  petSpeech.classList.add('bounce');
+  setTimeout(() => {
+    petSpeech.classList.remove('bounce');
+  }, 10000000);
+}
 
-// Helper function to compute events summary
+//TASKS__________________________________________________________________________
+//pulls todolist from localstorage and displays it
+//loads tasks
+async function loadTasks() {
+  try {
+    const tasks = await fetchToDoList();
+    renderTasks(tasks);
+  } catch (error) {
+    console.error('Error loading tasks:', error);
+    document.getElementById('to-do-list').innerHTML = `<p class="error-message">Error loading tasks: ${error.message}</p>`;
+  }
+}
+
+function renderTasks(tasks) {
+  if (!toDoList) return;
+  
+  if (!tasks) {
+    tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+  }
+  
+  
+  const taskContainer = document.getElementById('to-do-list');
+  taskContainer.innerHTML = ''; 
+  
+  if (!tasks || tasks.length === 0) {
+    taskContainer.innerHTML = '<p>No tasks to display</p>';
+    return;
+  }
+
+  tasks.forEach(task => {
+    const taskElement = document.createElement('div');
+    taskElement.className = 'task-item';
+    
+    //create the checkbox
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'task-checkbox';
+    checkbox.checked = task.status === 'completed';
+    checkbox.addEventListener('change', async () => {
+      await updateTaskStatus(task.id, checkbox.checked ? 'completed' : 'needsAction');
+      loadTasks();
+    });
+    
+    taskElement.innerHTML = `
+      <div class="task-content">
+        <div class="to-do-item ${task.status === 'completed' ? 'completed' : ''}">${task.title}</div>
+      <button class="delete-task-button" data-task-id="${task.id}">×</button>
+      </div>
+    `;
+    
+    //insert checkbox at the beginning
+    taskElement.insertBefore(checkbox, taskElement.firstChild);
+    taskContainer.appendChild(taskElement);
+    
+    //add delete event listener
+    taskElement.querySelector('.delete-task-button').addEventListener('click', async () => {
+      await handleDeleteTask(task.id);
+      loadTasks();
+    });
+    
+  });
+  
+  //update tasks summary during rendering
+  getTaskSummary().then((summary) => {
+    tasksSummaryData = summary;
+    updateSummary();
+  });
+}
+async function handleDeleteTask(taskId) {    
+  try {
+    showLoader();
+    await deleteTask(taskId);
+    changePetMessage("Task removed successfully!");
+    await loadTasks(); 
+  } catch (error) {
+    console.error('Error deleting task:', error);
+    changePetMessage("Oops! I couldn't delete that task.");
+  } finally {
+    hideLoader();
+  }
+}
+if (addTaskForm) {
+  addTaskForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    if (!taskTitleInput) {
+      console.error('Task title input not found');
+      changePetMessage("Oops! Something went wrong with the form.");
+      return;
+    }
+    
+    const taskTitle = taskTitleInput.value.trim();
+    if (taskTitle) {
+      try {
+        await addTaskToList({ title: taskTitle }); 
+        taskTitleInput.value = ''; 
+        loadTasks(); 
+      } catch (error) {
+        console.error('Error adding task:', error);
+        changePetMessage("Oops! I couldn't add your task.");
+      }
+    }
+  });
+}
+//EVENTS_________________________________________________________________________
+//helps summarize the information for summary of events
 function getEventSummary(events) {
   const now = new Date();
   const summary = {
@@ -98,63 +211,7 @@ function getEventSummary(events) {
   return summary;
 }
 
-function renderTasks() {
-  if (!toDoList) return;
-  const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-  toDoList.innerHTML = '';
-  
-  if (tasks.length === 0) {
-    toDoList.innerHTML = '<p>No tasks to display</p>';
-  } else {
-    tasks.forEach(task => {
-      const taskElement = document.createElement('div');
-      taskElement.className = 'task-item';
-      
-      // Checkbox for task completion
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.className = 'task-checkbox';
-      checkbox.checked = task.completed;
-      checkbox.addEventListener('change', () => toggleTaskCompletion(task.id));
-      
-      // Task content element
-      const taskContent = document.createElement('div');
-      taskContent.className = 'task-content';
-      
-      const taskTitleDiv = document.createElement('div');
-      taskTitleDiv.className = `task-title ${task.completed ? 'completed' : ''}`;
-      taskTitleDiv.textContent = task.title;
-      taskContent.appendChild(taskTitleDiv);
-      
-      // Delete button for task
-      const deleteButton = document.createElement('button');
-      deleteButton.className = 'delete-task-button';
-      deleteButton.textContent = 'x';
-      deleteButton.addEventListener('click', () => deleteTask(task.id));
-      
-      taskElement.appendChild(checkbox);
-      taskElement.appendChild(taskContent);
-      taskElement.appendChild(deleteButton);
-      toDoList.appendChild(taskElement);
-    });
-  }
-  
-  // Calculate and store tasks summary then update overall summary text
-  getTaskSummary().then((summary) => {
-    tasksSummaryData = summary;
-    updateSummary();
-  });
-}
-
-function changePetMessage(message) {
-  petSpeech.textContent = message;
-  petSpeech.classList.add('bounce');
-  setTimeout(() => {
-    petSpeech.classList.remove('bounce');
-  }, 10000000);
-}
-
-// Load calendar events and update events summary
+//load calendar events and update events summary
 async function loadEvents() {
   try {
     showLoader();
@@ -179,21 +236,10 @@ async function loadEvents() {
   }
 }
 
-function loadTasks() {
-  try {
-    showLoader(); 
-    renderTasks();
-    return Promise.resolve();
-  } catch (error) {
-    console.error('Error loading tasks:', error);
-    throw error;
-  } finally {
-    hideLoader();
-  }
-}
-
-// Modified renderEvents to store events summary and update overall summary text
+//store events summary and render events
 function renderEvents(events) {
+  if (!eventsContainer) return;
+
   eventsContainer.innerHTML = '';
   events.forEach(event => {
     const eventElement = document.createElement('div');
@@ -209,34 +255,40 @@ function renderEvents(events) {
     `;
     
     eventsContainer.appendChild(eventElement);
+
+    eventElement.querySelector('.delete-button').addEventListener('click', async () => {
+      await handleDeleteEvent(event.id); 
+    });
   });
   
-  // Get events summary and update global variable
   eventsSummaryData = getEventSummary(events);
   
-  // Display current date
+  //display curr date
   const date = new Date();
   const formatter = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
   currDate.textContent = formatter.format(date);
   
-  // Add delete event listeners
-  document.querySelectorAll('.delete-button').forEach(button => {
-    button.addEventListener('click', handleDeleteEvent);
-  });
-  
-  // Update overall summary text (this will include tasks summary if available)
   updateSummary();
 }
-async function handleDeleteEvent(e) {    
-  const eventId = e.target.getAttribute('data-event-id');  
+
+async function handleDeleteEvent(eventId) {    
+  if (!eventId) {
+    console.error('Attempted to delete event with null or undefined ID');
+    changePetMessage("Oops! Can't identify the event to delete.");
+    return;
+  }
+  
+  console.log('Attempting to delete event with ID:', eventId);
+  
   try {
     showLoader();
     await deleteCalendarEvent(eventId);
-    changePetMessage("Task removed successfully!");
-    await loadEvents();
+    console.log('Event deletion API call succeeded for ID:', eventId);
+    changePetMessage("Event removed successfully!");
+    await loadEvents(); 
   } catch (error) {
-    console.error('Error deleting event:', error);
-    changePetMessage("Oops! I couldn't delete that task.");
+    console.error(`Error deleting event with ID ${eventId}:`, error);
+    changePetMessage("Oops! I couldn't delete that event.");
   } finally {
     hideLoader();
   }
@@ -245,11 +297,11 @@ async function handleDeleteEvent(e) {
 
 
 
-
-document.addEventListener('DOMContentLoaded', function() {  
+document.addEventListener('DOMContentLoaded', function() { 
+  //update summary every 30 secs 
   setInterval(updateSummary, 30000);
 
-  // Check authentication
+  //check authentication
   chrome.storage.local.get(['authToken'], function(result) {
     showLoader();
 
@@ -261,53 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
       loadTasks();
       hideLoader();
     }
-
-    if (addTaskForm) {
-      addTaskForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const taskTitle = taskTitleInput.value.trim();
-        if (taskTitle) {
-          addTask(taskTitle);
-          taskTitleInput.value = '';
-        }
-      });
-    }
   });
-
-  // function addTask(title) {
-  //   let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-  //   const newTask = {
-  //     id: Date.now().toString(),
-  //     title: title,
-  //     completed: false,
-  //     createdAt: new Date().toISOString()
-  //   };
-  //   tasks.push(newTask);
-  //   localStorage.setItem('tasks', JSON.stringify(tasks));
-  //   renderTasks();
-  //   updateSummary();
-  // }
-  
-  // function deleteTask(taskId) {
-  //   let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-  //   tasks = tasks.filter(task => task.id !== taskId);
-  //   localStorage.setItem('tasks', JSON.stringify(tasks));
-  //   renderTasks();
-  // }
-  
-  // function toggleTaskCompletion(taskId) {
-  //   let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-  //   tasks = tasks.map(task => {
-  //     if (task.id === taskId) {
-  //       return { ...task, completed: !task.completed };
-  //     }
-  //     return task;
-  //   });
-  //   localStorage.setItem('tasks', JSON.stringify(tasks));
-  //   renderTasks();
-  // }
-  
-  // Modified renderTasks function that also updates tasks summary
   
   // Pet animations and messages
   const petMessages = [
@@ -323,43 +329,56 @@ document.addEventListener('DOMContentLoaded', function() {
     changePetMessage(petMessages[randomIndex]);
   }, 30000);
   
-  
-  // Event form toggle and submission for adding events
-  addEventButton.addEventListener('click', function() {
-    if (addEventForm.classList.contains('hidden')) {
-      addEventForm.classList.remove('hidden');
-    } else {
-      addEventForm.classList.add('hidden');
-    }
-  });
-  
-  addEventForm.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const eventDetails = {
-      title: document.getElementById('event-title').value,
-      date: document.getElementById('event-date').value,
-      time: document.getElementById('event-time').value,
-      duration: document.getElementById('event-duration').value
-    };
-    
-    try {
-      showLoader();
-      await createCalendarEvent(eventDetails);
-      addEventForm.reset();
-      addEventForm.classList.add('hidden');
-      changePetMessage("Great! I've added your new task!");
-      await loadEvents();
-    } catch (error) {
-      console.error('Error creating event:', error);
-      changePetMessage("Oops! I couldn't create your event.");
-    } finally {
-      hideLoader();
-    }
-  });
+  //event form toggle and submission for adding events
+  if (addEventButton) {
+    addEventButton.addEventListener('click', function() {
+      if (addEventForm.classList.contains('hidden')) {
+        addEventForm.classList.remove('hidden');
+      } else {
+        addEventForm.classList.add('hidden');
+      }
+    });
+  }
 
+  //handles event form submission
+  if (addEventForm) {
+    addEventForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const eventTitle = document.getElementById('event-title');
+      const eventDate = document.getElementById('event-date');
+      const eventTime = document.getElementById('event-time');
+      const eventDuration = document.getElementById('event-duration');
+      
+      if (!eventTitle || !eventDate || !eventTime || !eventDuration) {
+        console.error('Event form elements not found');
+        return;
+      }
+      
+      const eventDetails = {
+        title: eventTitle.value,
+        date: eventDate.value,
+        time: eventTime.value,
+        duration: eventDuration.value
+      };
+      
+      try {
+        showLoader();
+        await createCalendarEvent(eventDetails);
+        addEventForm.reset();
+        addEventForm.classList.add('hidden');
+        changePetMessage("Great! I've added your new event!");
+        await loadEvents();
+      } catch (error) {
+        console.error('Error creating event:', error);
+        changePetMessage("Oops! I couldn't create your event.");
+      } finally {
+        hideLoader();
+      }
+    });
+  }
   
-  // Sign out
+  //sign out
   signOutButton.addEventListener('click', function() {
     chrome.storage.local.remove(['authToken'], function() {
       window.location.href = 'signinpage.html';
