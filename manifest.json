@@ -16,6 +16,8 @@
         "identity",
         "storage",
         "notifications",
+        "tabs",
+        "activeTab",
         "alarms"
     ],
     "oauth2": {
@@ -29,9 +31,10 @@
     },
     "host_permissions": ["http://*/*", "https://*/*"],
     "background": {
-       "service_worker": "background.js"
+       "service_worker": "background.js",
+        "type": "module"
       },
       "content_security_policy": {
-        "extension_pages": "script-src 'self'; object-src 'self'; connect-src https://www.googleapis.com 'self'; default-src 'self';"
+        "extension_pages": "script-src 'self'; object-src 'self';"
       }
 }
