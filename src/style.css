@@ -11,6 +11,26 @@
   font-style: normal;
 }
 
+.date-navigation {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.nav-button {
+  background-color: #B9255E;
+  border-radius: 2em;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.nav-button:hover {
+  background-color: #b9094c;
+}
+
+
 .show-loader {
   display: flex !important;
 }

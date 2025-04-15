@@ -22,12 +22,16 @@ let tasksSummaryData = null;
 //updates summary
 function updateSummary() {
   let summary = "";
+  
   if (eventsSummaryData) {
     summary += `You've completed ${eventsSummaryData.completedEvents} out of ${eventsSummaryData.totalEvents} event${eventsSummaryData.totalEvents > 1 ? 's' : ''} today (${eventsSummaryData.completedPercentage}% completed).`;
+
   }
+  
   if (tasksSummaryData) {
     summary += '\n' + tasksSummaryData;
   }
+  
   summaryText.textContent = summary;
 }
 
@@ -183,6 +187,56 @@ if (addTaskForm) {
 }
 //EVENTS_________________________________________________________________________
 //helps summarize the information for summary of events
+//add a currentViewDate variable and functions to navigate dates
+let currentViewDate = new Date();
+
+function formatDateForDisplay(date) {
+  const formatter = new Intl.DateTimeFormat('en-US', { 
+    weekday: 'long', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+  return formatter.format(date);
+}
+
+async function navigateToDate(offset) {
+  showLoader();
+  
+  //create a new date based on the current view date
+  const newDate = new Date(currentViewDate);
+  newDate.setDate(newDate.getDate() + offset);
+  currentViewDate = newDate;
+  
+  //update the date display
+  currDate.textContent = formatDateForDisplay(currentViewDate);
+  
+  //load events for the new date
+  try {
+    const events = await fetchCalendarEvents(currentViewDate);
+    renderEvents(events);
+    
+    //check if we're viewing today
+    const today = new Date();
+    const isToday = today.toDateString() === currentViewDate.toDateString();
+
+    updateSummary();
+    
+    if (events.length === 0) {
+      changePetMessage(isToday 
+        ? "Your day is clear! Want to add something?" 
+        : `No events on ${formatDateForDisplay(currentViewDate)}`);
+    } else {
+      changePetMessage(isToday
+        ? `You have ${events.length} event${events.length > 1 ? 's' : ''} today!`
+        : `${events.length} event${events.length > 1 ? 's' : ''} on ${formatDateForDisplay(currentViewDate)}`);
+    }
+  } catch (error) {
+    console.error('Error loading events:', error);
+  } finally {
+    hideLoader();
+  }
+}
+
 function getEventSummary(events) {
   const now = new Date();
   const summary = {
@@ -215,13 +269,21 @@ function getEventSummary(events) {
 async function loadEvents() {
   try {
     showLoader();
-    const events = await fetchCalendarEvents();
+    const events = await fetchCalendarEvents(currentViewDate);
+    
+    // Check if we're viewing today
+    const today = new Date();
+    const isToday = today.toDateString() === currentViewDate.toDateString();
     
     if (events.length === 0) {
-      changePetMessage("Your day is clear! Want to add something?");
+      changePetMessage(isToday 
+        ? "Your day is clear! Want to add something?" 
+        : `No events on ${formatDateForDisplay(currentViewDate)}`);
     } else {
       renderEvents(events);
-      changePetMessage(`You have ${events.length} event${events.length > 1 ? 's' : ''} today!`);
+      changePetMessage(isToday
+        ? `You have ${events.length} event${events.length > 1 ? 's' : ''} today!`
+        : `${events.length} event${events.length > 1 ? 's' : ''} on ${formatDateForDisplay(currentViewDate)}`);
     }
     return events;
   } catch (error) {
@@ -263,10 +325,7 @@ function renderEvents(events) {
   
   eventsSummaryData = getEventSummary(events);
   
-  //display curr date
-  const date = new Date();
-  const formatter = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-  currDate.textContent = formatter.format(date);
+  currDate.textContent = formatDateForDisplay(currentViewDate);
   
   updateSummary();
 }
@@ -298,6 +357,37 @@ async function handleDeleteEvent(eventId) {
 
 
 document.addEventListener('DOMContentLoaded', function() { 
+  const dateNavigationContainer = document.createElement('div');
+  dateNavigationContainer.className = 'date-navigation';
+  
+  const prevButton = document.createElement('button');
+  prevButton.id = 'prev-day';
+  prevButton.className = 'nav-button';
+  prevButton.innerHTML = '<';
+  prevButton.addEventListener('click', () => navigateToDate(-1));
+  
+  const todayButton = document.createElement('button');
+  todayButton.id = 'today';
+  todayButton.className = 'nav-button';
+  todayButton.innerHTML = 'Today';
+  todayButton.addEventListener('click', () => {
+    currentViewDate = new Date();
+    navigateToDate(0);
+  });
+  
+  const nextButton = document.createElement('button');
+  nextButton.id = 'next-day';
+  nextButton.className = 'nav-button';
+  nextButton.innerHTML = '>';
+  nextButton.addEventListener('click', () => navigateToDate(1));
+  
+  dateNavigationContainer.appendChild(prevButton);
+  dateNavigationContainer.appendChild(todayButton);
+  dateNavigationContainer.appendChild(nextButton);
+  
+  // Insert the navigation container before the date display
+  const dateDisplay = document.getElementById('date-display');
+  dateDisplay.parentNode.insertBefore(dateNavigationContainer, dateDisplay);
   //update summary every 30 secs 
   setInterval(updateSummary, 30000);
 
@@ -386,4 +476,3 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-// export {loadEvents};

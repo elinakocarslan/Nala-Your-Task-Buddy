@@ -96,7 +96,6 @@ function createEventNotification(event, minutesBefore) {
       requireInteraction: true, // keeps the notification until the user interacts
       buttons: [
         { title: "Dismiss" },
-        { title: "Open Calendar" }
       ]
     }, (notificationId) => {
       if (chrome.runtime.lastError) {

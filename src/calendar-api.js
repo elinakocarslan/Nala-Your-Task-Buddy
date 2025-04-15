@@ -1,4 +1,4 @@
-async function fetchCalendarEvents() {
+async function fetchCalendarEvents(targetDate = null) {
   return new Promise((resolve, reject) => {
     chrome.storage.local.get(['authToken'], async function(result) {
       if (!result.authToken) {
@@ -8,19 +8,25 @@ async function fetchCalendarEvents() {
       }
 
       try {
-        //get today's date at midnight
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        //set the target date to midnight
+        let selectedDate;
+        if (targetDate instanceof Date && !isNaN(targetDate)) {
+          selectedDate = new Date(targetDate);
+        } else {
+          //default to today if targetDate is invalid
+          selectedDate = new Date();
+        }
+
+        selectedDate.setHours(0, 0, 0, 0);
         
-        //get tomorrow's date at midnight
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
+        //get the next day at midnight
+        const nextDay = new Date(selectedDate);
+        nextDay.setDate(nextDay.getDate() + 1);
         
         //format dates in RFC3339 format
-        const timeMin = today.toISOString();
-        const timeMax = tomorrow.toISOString();        
+        const timeMin = selectedDate.toISOString();
+        const timeMax = nextDay.toISOString();        
 
-        //get the list of all calendars
         const calendarListUrl = `https://www.googleapis.com/calendar/v3/users/me/calendarList`;
         const calendarResponse = await fetch(calendarListUrl, {
           headers: {
@@ -34,15 +40,12 @@ async function fetchCalendarEvents() {
         }
 
         const calendarData = await calendarResponse.json();
-        // filter calendars that are checked/visible (`selected: true`)
         const visibleCalendars = calendarData.items.filter(cal => cal.selected);
 
         let allEvents = [];
 
-        // fetch events from only the visible calendars
         for (const calendar of visibleCalendars) {
           const calendarId = encodeURIComponent(calendar.id);
-          // here add option to see yesterday and the day after curr day!!!
           const eventsUrl = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime`;
 
           const eventsResponse = await fetch(eventsUrl, {
@@ -59,12 +62,12 @@ async function fetchCalendarEvents() {
             console.warn(`Failed to fetch events from calendar: ${calendarId}`);
           }
         }
-        //sort events by start time
+        
         allEvents.sort((a, b) => {
-          const timeA = a.start.dateTime ? new Date(a.start.dateTime).getTime() : Infinity; //timed events have real timestamps
-          const timeB = b.start.dateTime ? new Date(b.start.dateTime).getTime() : Infinity; //all-day events = Infinity
+          const timeA = a.start.dateTime ? new Date(a.start.dateTime).getTime() : Infinity;
+          const timeB = b.start.dateTime ? new Date(b.start.dateTime).getTime() : Infinity;
 
-          return timeA - timeB; //sort ascending, all-day events at the end
+          return timeA - timeB;
         });
 
         resolve(allEvents);
