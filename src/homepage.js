@@ -355,7 +355,6 @@ async function handleDeleteEvent(eventId) {
 
 
 
-
 document.addEventListener('DOMContentLoaded', function() { 
   const dateNavigationContainer = document.createElement('div');
   dateNavigationContainer.className = 'date-navigation';
