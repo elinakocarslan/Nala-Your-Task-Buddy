@@ -405,17 +405,15 @@ h2 {
 
 /* Add Event Section */
 .add-event-section {
-  display: flex;
-  align-items: center;
+  text-align: center;
   border-radius: 40px;
   background-color: #FF779E;
   color:#FFE2F1;
-  padding: 10px 10px;
+  padding: 10px 20px;
   margin: 20px 0px;
   box-shadow: 5px 5px 5px #7a7a7a;
   font-family: 'Noto Serif Display';
   font-size: 24px;
-  justify-content: center;
 }
 
 #add-event-button {
